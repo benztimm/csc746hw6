@@ -1,1 +1,0 @@
-/opt/cray/pe/craype/2.7.20/bin/CC -O3 -DNDEBUG CMakeFiles/mpi_2dmesh.dir/mpi_2dmesh.cpp.o -o mpi_2dmesh 

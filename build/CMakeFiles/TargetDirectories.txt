@@ -1,3 +1,0 @@
-/global/homes/b/benztimm/mpitest/build/CMakeFiles/rebuild_cache.dir
-/global/homes/b/benztimm/mpitest/build/CMakeFiles/edit_cache.dir
-/global/homes/b/benztimm/mpitest/build/CMakeFiles/mpi_2dmesh.dir

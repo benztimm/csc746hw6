@@ -40,10 +40,10 @@
 
 #include "mpi_2dmesh.hpp"  // for AppState and Tile2D class
 
-#define DEBUG_TRACE 0 
+#define DEBUG_TRACE 0
 
 int messageCount = 0;
-double dataMovement = 0.0;
+extern long long dataMovement = 0;
 
 int
 parseArgs(int ac, char *av[], AppState *as)
@@ -394,8 +394,10 @@ sendStridedBuffer(float *srcBuf,
    MPI_Type_commit(&SendData);
    int offset =  srcOffsetRow * srcWidth + srcOffsetColumn;
    MPI_Send(srcBuf + offset, 1, SendData, toRank, msgTag, MPI_COMM_WORLD);
+   
    messageCount++;
    dataMovement += sendWidth * sendHeight * sizeof(float);
+   MPI_Type_free(&SendData);
 }
 
 void
@@ -421,8 +423,11 @@ recvStridedBuffer(float *dstBuf,
 	MPI_Type_commit(&RecvData);
    int offset = dstOffsetRow * dstWidth + dstOffsetColumn;
 	MPI_Recv(dstBuf + offset, 1, RecvData, fromRank, msgTag, MPI_COMM_WORLD, &stat);
-   messageCount++;
+   
+   
    dataMovement += expectedWidth * expectedHeight * sizeof(float);
+   messageCount++;
+   MPI_Type_free(&RecvData);
 }
 
 
@@ -755,8 +760,8 @@ int main(int ac, char *av[]) {
       printf("\tSobel time:\t%6.4f (ms) \n", elapsed_sobel_time*1000.0);
       printf("\tGather time:\t%6.4f (ms) \n", elapsed_gather_time*1000.0);
       printf("\tMessage Count:\t%i \n", messageCount );
-      printf("\tData Movement:\t%f \n", dataMovement / 1000000); 
-      printf("dataMovement: %f \n", dataMovement);
+      std::cout << "Total data transferred " << dataMovement << " bytes" << std::endl;
+      std::cout << "Total data transferred " << dataMovement / 1000000 << " MB" << std::endl;
    }
 
    MPI_Finalize();
